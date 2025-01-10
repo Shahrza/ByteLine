@@ -1,4 +1,6 @@
 import React from "react";
+import { format } from "date-fns";
+
 import { Article } from "../../types/article";
 
 type Props = {
@@ -6,27 +8,25 @@ type Props = {
 };
 
 const Card: React.FC<Props> = (props) => {
-  const {
-    title,
-    author,
-    source: { name },
-    urlToImage,
-    publishedAt,
-    content,
-  } = props.item;
+  const { title, author, urlToImage, publishedAt, content, source } =
+    props.item;
   return (
-    <div className="border border-gray-200 rounded-md p-4 my-4">
-      <img className="w-full mb-4" src={urlToImage} />
+    <div>
+      <img className="w-full h-52 object-cover mb-3" src={urlToImage} />
 
-      <h3>{title}</h3>
-      <p>{author}</p>
-      <p>{name}</p>
+      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mb-2 inline-block">
+        {source.name}
+      </span>
 
-      <p>{content}</p>
-      <p>{publishedAt}</p>
-      <button className="bg-blue-500 text-white px-4 py-2 rounded-md flex mt-4">
-        Read More
-      </button>
+      <h3 className="text-xl font-semibold mb-4">{title}</h3>
+
+      <p className="text-gray-700">{content}</p>
+
+      <div className="flex text-sm text-gray-500 mt-4">
+        <p>By {author}</p>
+        <span className="mx-2">|</span>
+        <p>{format(new Date(publishedAt), "MMMM dd, yyyy")}</p>
+      </div>
     </div>
   );
 };

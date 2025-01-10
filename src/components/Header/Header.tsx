@@ -11,7 +11,7 @@ const Header: React.FC = () => {
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 flex justify-between items-center py-4">
         <a href="/" className="text-2xl font-bold text-blue-500">
-          News
+          ByteLine
         </a>
 
         <nav className="hidden md:flex space-x-6">
