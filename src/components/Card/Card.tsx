@@ -1,7 +1,7 @@
 import React from "react";
 import { format } from "date-fns";
 
-import { Article } from "../../types/article";
+import { Article } from "@/types/article";
 
 type Props = {
   item: Article;

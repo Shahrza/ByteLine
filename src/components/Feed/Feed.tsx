@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import useSWR from "swr";
 
-import Card from "../Card/Card";
-import Loading from "../common/Loading";
-import { Article } from "../../types/article";
+import Card from "@/components/Card/Card";
+import Loading from "@/components/common/Loading";
+import { Article } from "@/types/article";
 
 type PaginatedResponse = {
   status: "ok" | "error";
@@ -69,7 +69,7 @@ const Feed: React.FC = () => {
 
   return (
     <>
-      <div className="container mx-auto mt-9 px-4 grid grid-cols-4 gap-x-5 gap-y-9">
+      <div className="container mx-auto mt-9 px-4 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
         {allData?.map((article: Article) => (
           <Card item={article} key={article.title} />
         ))}
