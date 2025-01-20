@@ -4,6 +4,7 @@ import useSWR from "swr";
 import Card from "@/components/Card/Card";
 import Loading from "@/components/common/Loading";
 import { Article } from "@/types/article";
+import { fetcher } from "@/services/API";
 
 type PaginatedResponse = {
   status: "ok" | "error";
@@ -11,9 +12,6 @@ type PaginatedResponse = {
   articles: Article[];
   message?: string;
 };
-
-const fetcher = (url: string): Promise<PaginatedResponse> =>
-  fetch(url).then((res) => res.json());
 
 const Feed: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -24,12 +22,8 @@ const Feed: React.FC = () => {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { data, error, isValidating } = useSWR<PaginatedResponse>(
-    hasMore
-      ? `https://newsapi.org/v2/everything?sources=techcrunch&pageSize=10&page=${page}&apiKey=${
-          import.meta.env.VITE_API_KEY
-        }`
-      : null,
-    fetcher
+    `/everything?sources=techcrunch&pageSize=10&page=${page}`,
+    fetcher<PaginatedResponse>
   );
 
   useEffect(() => {
@@ -41,6 +35,8 @@ const Feed: React.FC = () => {
       }
       setAllData((prev) => [...prev, ...data.articles]);
       setHasMore(data.articles.length < data.totalResults);
+    } else {
+      setHasMore(false);
     }
   }, [data]);
 
@@ -71,7 +67,7 @@ const Feed: React.FC = () => {
     <>
       <div className="container mx-auto mt-9 px-4 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
         {allData?.map((article: Article) => (
-          <Card item={article} key={article.title} />
+          <Card item={article} key={article.url} />
         ))}
       </div>
       <div className="my-8">
