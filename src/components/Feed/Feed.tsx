@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import useSWR from "swr";
 import useStore from "@/store/header";
 
@@ -14,7 +14,7 @@ type PaginatedResponse = {
   message?: string;
 };
 
-const Feed: React.FC = () => {
+const Feed = () => {
   const [page, setPage] = useState(1);
   const [allData, setAllData] = useState<Article[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -72,7 +72,7 @@ const Feed: React.FC = () => {
   }, [hasMore, isValidating]);
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-100 py-10 px-5 sm:px-10">
       <div className="container mx-auto mt-9 px-4 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
         {allData?.map((article: Article) => (
           <Card item={article} key={article.url} />
@@ -99,7 +99,7 @@ const Feed: React.FC = () => {
           <Loading />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

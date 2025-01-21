@@ -1,11 +1,9 @@
-import React from "react";
-
 interface LoadingProps {
   size?: number;
   color?: string;
 }
 
-const Loading: React.FC<LoadingProps> = ({ size = 64, color = "blue-500" }) => {
+const Loading = ({ size = 64, color = "blue-500" }: LoadingProps) => {
   return (
     <div className="flex items-center justify-center">
       <div

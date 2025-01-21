@@ -1,4 +1,3 @@
-import React from "react";
 import { format } from "date-fns";
 
 import { Article } from "@/types/article";
@@ -7,7 +6,7 @@ type Props = {
   item: Article;
 };
 
-const Card: React.FC<Props> = (props) => {
+const Card = (props: Props) => {
   const { title, author, urlToImage, publishedAt, content, source } =
     props.item;
   return (

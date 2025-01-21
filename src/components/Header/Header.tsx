@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router";
 import useStore from "@/store/header";
 
-const Header: React.FC = () => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
@@ -44,18 +45,12 @@ const Header: React.FC = () => {
         </form>
 
         <nav className="hidden md:flex space-x-6">
-          <a href="#home" className="text-gray-700 hover:text-blue-500">
+          <NavLink to="/" className="text-gray-700 hover:text-blue-500">
             Home
-          </a>
-          <a href="#about" className="text-gray-700 hover:text-blue-500">
+          </NavLink>
+          <NavLink to="/about" className="text-gray-700 hover:text-blue-500">
             About
-          </a>
-          <a href="#services" className="text-gray-700 hover:text-blue-500">
-            Services
-          </a>
-          <a href="#contact" className="text-gray-700 hover:text-blue-500">
-            Contact
-          </a>
+          </NavLink>
         </nav>
 
         <button
