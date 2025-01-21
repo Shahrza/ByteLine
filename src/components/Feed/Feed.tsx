@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import useSWR from "swr";
+import useStore from "@/store/header";
 
 import Card from "@/components/Card/Card";
 import Loading from "@/components/common/Loading";
@@ -19,10 +20,12 @@ const Feed: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
 
+  const { search } = useStore();
+
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { data, error, isValidating } = useSWR<PaginatedResponse>(
-    `/everything?sources=techcrunch&pageSize=10&page=${page}`,
+    `/everything?sources=techcrunch&pageSize=10&page=${page}&q=${search}`,
     fetcher<PaginatedResponse>
   );
 
@@ -35,10 +38,15 @@ const Feed: React.FC = () => {
       }
       setAllData((prev) => [...prev, ...data.articles]);
       setHasMore(data.articles.length < data.totalResults);
-    } else {
-      setHasMore(false);
     }
   }, [data]);
+
+  useEffect(() => {
+    setPage(1);
+    setAllData([]);
+    setHasMore(true);
+    setErrorMessage("");
+  }, [search]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

@@ -1,10 +1,23 @@
 import React, { useState } from "react";
+import useStore from "@/store/header";
 
 const Header: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+
+  const { setSearch } = useStore();
 
   const toggleMenu = (): void => {
     setIsOpen(!isOpen);
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSearch(searchInput);
   };
 
   return (
@@ -13,6 +26,22 @@ const Header: React.FC = () => {
         <a href="/" className="text-2xl font-bold text-blue-500">
           ByteLine
         </a>
+
+        <form onSubmit={handleSubmit} className="mx-4">
+          <input
+            value={searchInput}
+            onChange={handleChange}
+            type="input"
+            className="px-4 py-2 rounded-lg rounded-r-none w-80 border border-gray-200 focus:outline-none"
+            placeholder="Search..."
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 border border-blue-500 text-white px-4 py-2 rounded-lg rounded-l-none focus:outline-none"
+          >
+            Go
+          </button>
+        </form>
 
         <nav className="hidden md:flex space-x-6">
           <a href="#home" className="text-gray-700 hover:text-blue-500">
