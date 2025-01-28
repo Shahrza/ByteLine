@@ -21,24 +21,40 @@ const Header = () => {
     setSearch(searchInput);
   };
 
+  const handleClear = () => {
+    setSearchInput("");
+    setSearch("");
+  };
+
   return (
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 flex justify-between items-center py-4">
-        <a href="/" className="text-2xl font-bold text-blue-500">
+        <NavLink to="/" className="text-2xl font-bold text-blue-500">
           ByteLine
-        </a>
+        </NavLink>
 
-        <form onSubmit={handleSubmit} className="mx-4">
-          <input
-            value={searchInput}
-            onChange={handleChange}
-            type="input"
-            className="px-4 py-2 rounded-lg rounded-r-none w-80 border border-gray-200 focus:outline-none"
-            placeholder="Search..."
-          />
+        <form onSubmit={handleSubmit} className="mx-4 flex items-center">
+          <div className="relative">
+            <input
+              value={searchInput}
+              onChange={handleChange}
+              type="input"
+              className=" px-4 py-2 rounded-lg rounded-r-none w-80 border border-gray-200 focus:outline-none"
+              placeholder="Search..."
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="absolute w-5 right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              >
+                ✕
+              </button>
+            )}
+          </div>
           <button
             type="submit"
-            className="bg-blue-500 border border-blue-500 text-white px-4 py-2 rounded-lg rounded-l-none focus:outline-none"
+            className="bg-blue-500 border border-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg rounded-l-none focus:outline-none cursor-pointer"
           >
             Go
           </button>

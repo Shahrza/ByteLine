@@ -25,8 +25,13 @@ const Feed = () => {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { data, error, isValidating } = useSWR<PaginatedResponse>(
-    `/everything?sources=techcrunch&pageSize=10&page=${page}&q=${search}`,
-    fetcher<PaginatedResponse>
+    `/everything?sources=techcrunch&pageSize=10&page=${
+      search ? 1 : page
+    }&q=${search}`,
+    fetcher<PaginatedResponse>,
+    {
+      revalidateIfStale: false,
+    }
   );
 
   useEffect(() => {
@@ -36,22 +41,29 @@ const Feed = () => {
         setErrorMessage(data.message);
         return;
       }
+      setHasMore(search ? false : data.articles.length < data.totalResults);
+      if (search || page === 1) {
+        setAllData(data.articles);
+        return;
+      }
       setAllData((prev) => [...prev, ...data.articles]);
-      setHasMore(data.articles.length < data.totalResults);
     }
-  }, [data]);
+  }, [data, search, page]);
 
   useEffect(() => {
     setPage(1);
-    setAllData([]);
-    setHasMore(true);
-    setErrorMessage("");
   }, [search]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && hasMore && !isValidating) {
+        if (
+          entry.isIntersecting &&
+          hasMore &&
+          !search &&
+          !isValidating &&
+          !error
+        ) {
           setPage((prevPage) => prevPage + 1);
         }
       },
@@ -59,7 +71,6 @@ const Feed = () => {
     );
 
     const currentLoadMoreRef = loadMoreRef.current;
-
     if (currentLoadMoreRef) {
       observer.observe(currentLoadMoreRef);
     }
@@ -69,15 +80,22 @@ const Feed = () => {
         observer.unobserve(currentLoadMoreRef);
       }
     };
-  }, [hasMore, isValidating]);
+  }, [hasMore, isValidating, error, search]);
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-5 sm:px-10">
-      <div className="container mx-auto mt-9 px-4 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
-        {allData?.map((article: Article) => (
-          <Card item={article} key={article.url} />
-        ))}
-      </div>
+      {!(page === 1 && isValidating && search) && (
+        <div className="container mx-auto mt-9 px-4 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
+          {allData?.map((article: Article) => (
+            <Card item={article} key={article.url} />
+          ))}
+        </div>
+      )}
+      {isValidating && (
+        <div className="flex items-center justify-center my-20">
+          <Loading />
+        </div>
+      )}
       <div className="my-8">
         {error && (
           <div className="text-center text-red-500 mt-2">
@@ -93,12 +111,7 @@ const Feed = () => {
           </div>
         )}
       </div>
-      <div ref={loadMoreRef} style={{ height: "1px" }} />
-      {isValidating && (
-        <div className="flex items-center justify-center my-20">
-          <Loading />
-        </div>
-      )}
+      {!isValidating && <div ref={loadMoreRef} style={{ height: "1px" }} />}
     </div>
   );
 };
