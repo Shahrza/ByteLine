@@ -83,9 +83,9 @@ const Feed = () => {
   }, [hasMore, isValidating, error, search]);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-5 sm:px-10">
+    <div className="min-h-screen bg-gray-100 py-5 px-5 md:py-10 md:px-10">
       {!(page === 1 && isValidating && search) && (
-        <div className="container mx-auto mt-9 px-4 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
+        <div className="container mx-auto mt-5 md:mt-9 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
           {allData?.map((article: Article) => (
             <Card item={article} key={article.url} />
           ))}

@@ -39,7 +39,7 @@ const Header = () => {
               value={searchInput}
               onChange={handleChange}
               type="input"
-              className=" px-4 py-2 rounded-lg rounded-r-none w-80 border border-gray-200 focus:outline-none"
+              className="px-4 py-2 rounded-lg w-40 md:w-80 rounded-r-none border border-gray-200 focus:outline-none"
               placeholder="Search..."
             />
             {searchInput && (
@@ -93,30 +93,20 @@ const Header = () => {
 
       {isOpen && (
         <nav className="md:hidden bg-white shadow-lg">
-          <a
-            href="#home"
+          <NavLink
+            to="/"
             className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            onClick={toggleMenu}
           >
             Home
-          </a>
-          <a
-            href="#about"
+          </NavLink>
+          <NavLink
+            to="/about"
             className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            onClick={toggleMenu}
           >
             About
-          </a>
-          <a
-            href="#services"
-            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            Services
-          </a>
-          <a
-            href="#contact"
-            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            Contact
-          </a>
+          </NavLink>
         </nav>
       )}
     </header>
