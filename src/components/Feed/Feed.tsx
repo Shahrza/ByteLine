@@ -1,17 +1,42 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import useSWR from "swr";
-import useStore from "@/store/header";
+import useSWRImmutable from "swr/immutable";
 
+import useStore from "@/store";
 import Card from "@/components/Card/Card";
 import Loading from "@/components/common/Loading";
+import Select from "@/components/common/Select";
 import { Article } from "@/types/article";
 import { fetcher } from "@/services/API";
 
-type PaginatedResponse = {
+type EverythingResponse = {
   status: "ok" | "error";
   totalResults: number;
   articles: Article[];
   message?: string;
+};
+
+type HeadlinesResponse = {
+  status: string;
+  sources: { id: string; name: string }[];
+};
+
+const useEverything = (page: number = 1, source?: string, search?: string) => {
+  const params = new URLSearchParams({
+    pageSize: "10",
+    page: search ? "1" : String(page),
+  });
+
+  if (source) params.append("sources", source);
+  if (search) params.append("q", search);
+
+  const { data, error, isValidating } = useSWR<EverythingResponse>(
+    `/everything?${params.toString()}`,
+    fetcher,
+    { revalidateIfStale: false }
+  );
+
+  return { data, error, isValidating };
 };
 
 const Feed = () => {
@@ -20,18 +45,15 @@ const Feed = () => {
   const [hasMore, setHasMore] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
 
-  const { search } = useStore();
+  const { search, source, setSource } = useStore();
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data, error, isValidating } = useSWR<PaginatedResponse>(
-    `/everything?sources=techcrunch&pageSize=10&page=${
-      search ? 1 : page
-    }&q=${search}`,
-    fetcher<PaginatedResponse>,
-    {
-      revalidateIfStale: false,
-    }
+  const { data, error, isValidating } = useEverything(page, source, search);
+
+  const { data: allHeadlines } = useSWRImmutable<HeadlinesResponse>(
+    `/top-headlines/sources?category=technology`,
+    fetcher<HeadlinesResponse>
   );
 
   useEffect(() => {
@@ -41,7 +63,11 @@ const Feed = () => {
         setErrorMessage(data.message);
         return;
       }
-      setHasMore(search ? false : data.articles.length < data.totalResults);
+      setHasMore(
+        search || !data.articles.length
+          ? false
+          : data.articles.length < data.totalResults
+      );
       if (search || page === 1) {
         setAllData(data.articles);
         return;
@@ -52,7 +78,7 @@ const Feed = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [search]);
+  }, [search, source]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -62,7 +88,8 @@ const Feed = () => {
           hasMore &&
           !search &&
           !isValidating &&
-          !error
+          !error &&
+          data
         ) {
           setPage((prevPage) => prevPage + 1);
         }
@@ -80,17 +107,32 @@ const Feed = () => {
         observer.unobserve(currentLoadMoreRef);
       }
     };
-  }, [hasMore, isValidating, error, search]);
+  }, [hasMore, isValidating, error, search, data]);
+
+  const sourceOptions = useMemo(() => {
+    return allHeadlines
+      ? allHeadlines.sources.map((source) => ({
+          value: source.id,
+          label: source.name,
+        }))
+      : [];
+  }, [allHeadlines]);
 
   return (
     <div className="min-h-screen bg-gray-100 py-5 px-5 md:py-10 md:px-10">
-      {!(page === 1 && isValidating && search) && (
-        <div className="container mx-auto mt-5 md:mt-9 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
-          {allData?.map((article: Article) => (
+      <div className="container mx-auto mt-0">
+        <Select
+          onChange={(value: string) => setSource(value)}
+          options={sourceOptions}
+          placeholder="Select source"
+        />
+      </div>
+      <div className="container mx-auto mt-5 md:mt-9 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
+        {!(page === 1 && isValidating && search) &&
+          allData?.map((article: Article) => (
             <Card item={article} key={article.url} />
           ))}
-        </div>
-      )}
+      </div>
       {isValidating && (
         <div className="flex items-center justify-center my-20">
           <Loading />

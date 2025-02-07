@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router";
-import useStore from "@/store/header";
+import useStore from "@/store";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +39,7 @@ const Header = () => {
               value={searchInput}
               onChange={handleChange}
               type="input"
-              className="px-4 py-2 rounded-lg w-40 md:w-80 rounded-r-none border border-gray-200 focus:outline-none"
+              className="px-4 py-2 rounded-lg w-[28vw] md:w-80 rounded-r-none border border-gray-200 focus:outline-none"
               placeholder="Search..."
             />
             {searchInput && (

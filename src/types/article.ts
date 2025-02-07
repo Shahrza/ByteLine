@@ -9,4 +9,5 @@ export type Article = {
   urlToImage: string;
   publishedAt: string;
   content: string;
+  description: string;
 };
