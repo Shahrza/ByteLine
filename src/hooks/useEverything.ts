@@ -2,6 +2,7 @@ import useSWR from "swr";
 
 import { fetcher } from "@/services/API";
 import { Article } from "@/types/article";
+import type { URLSearchParams } from "@/store";
 
 type EverythingResponse = {
   status: "ok" | "error";
@@ -10,14 +11,9 @@ type EverythingResponse = {
   message?: string;
 };
 
-type URLSearchParams = {
-  search: string;
-  source: string;
-};
-
 const useEverything = (
   page: number = 1,
-  { search, source }: URLSearchParams
+  { search, source, sortBy }: URLSearchParams
 ) => {
   const params = new URLSearchParams({
     pageSize: "10",
@@ -26,6 +22,7 @@ const useEverything = (
 
   if (source) params.append("sources", source);
   if (search) params.append("q", search);
+  if (sortBy) params.append("sortBy", sortBy);
 
   const { data, error, isValidating } = useSWR<EverythingResponse>(
     `/everything?${params.toString()}`,

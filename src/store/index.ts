@@ -1,17 +1,21 @@
 import { create } from "zustand";
 
-type URLSearchParams = {
+export type URLSearchParams = {
   search: string;
   source: string;
+  sortBy: string;
 };
 
 type State = {
   params: URLSearchParams;
+};
+
+type Action = {
   setParams: (params: URLSearchParams) => void;
 };
 
-const useStore = create<State>((set) => ({
-  params: { search: "", source: "techcrunch" },
+const useStore = create<State & Action>((set) => ({
+  params: { search: "", source: "techcrunch", sortBy: "publishedAt" },
   setParams: (params) => set({ params }),
 }));
 

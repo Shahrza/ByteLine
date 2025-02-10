@@ -7,9 +7,9 @@ type Props = {
   item: Article;
 };
 
-const Card = (props: Props) => {
+const Card = ({ item }: Props) => {
   const { title, author, urlToImage, publishedAt, description, source, url } =
-    props.item;
+    item;
 
   return (
     <a href={url} target="_blank" className="bg-white p-4 rounded-lg shadow-md">

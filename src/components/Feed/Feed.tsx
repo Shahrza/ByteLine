@@ -4,10 +4,11 @@ import Card from "@/components/Card/Card";
 import Loading from "@/components/common/Loading";
 import Select from "@/components/common/Select";
 
-import { Article } from "@/types/article";
 import useStore from "@/store";
 import useHeadlines from "@/hooks/useHeadlines";
 import useEverything from "@/hooks/useEverything";
+import { Article } from "@/types/article";
+import { sortOptions } from "@/constants";
 
 const Feed = () => {
   const [page, setPage] = useState(1);
@@ -86,14 +87,30 @@ const Feed = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-5 px-5 md:py-10 md:px-10">
-      <div className="container mx-auto mt-0">
+      <div className="container mx-auto mt-0 flex align-center gap-5">
         <Select
           value={params.source}
+          label="Source"
           onChange={(value: string) =>
-            setParams({ search: params.search, source: value })
+            setParams({
+              ...params,
+              source: value,
+            })
           }
           options={sourceOptions}
           placeholder="Select source"
+        />
+        <Select
+          value={params.sortBy}
+          label="Sort by"
+          onChange={(value: string) =>
+            setParams({
+              ...params,
+              sortBy: value,
+            })
+          }
+          options={sortOptions}
+          placeholder="Select sort by"
         />
       </div>
       <div className="container mx-auto mt-5 md:mt-9 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">

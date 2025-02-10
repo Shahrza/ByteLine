@@ -19,12 +19,15 @@ const Header = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setParams({ search: searchInput, source: params.source });
+    setParams({
+      ...params,
+      search: searchInput,
+    });
   };
 
   const handleClear = () => {
     setSearchInput("");
-    setParams({ search: "", source: params.source });
+    setParams({ ...params, search: "" });
   };
 
   return (
