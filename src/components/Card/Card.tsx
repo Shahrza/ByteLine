@@ -18,7 +18,7 @@ const Card = (props: Props) => {
         src={urlToImage ? urlToImage : NoImage}
         alt="cover image"
       />
-      <span className="text-xs text-white bg-gray-400 px-2 py-1 rounded-full mb-2 inline-block">
+      <span className="text-xs text-white bg-cyan-600 px-2 py-1 rounded-full mb-2 inline-block">
         {source.name}
       </span>
       <h3 className="text-xl font-semibold mb-4">{title}</h3>

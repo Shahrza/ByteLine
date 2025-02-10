@@ -1,43 +1,13 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import useSWR from "swr";
-import useSWRImmutable from "swr/immutable";
 
-import useStore from "@/store";
 import Card from "@/components/Card/Card";
 import Loading from "@/components/common/Loading";
 import Select from "@/components/common/Select";
+
 import { Article } from "@/types/article";
-import { fetcher } from "@/services/API";
-
-type EverythingResponse = {
-  status: "ok" | "error";
-  totalResults: number;
-  articles: Article[];
-  message?: string;
-};
-
-type HeadlinesResponse = {
-  status: string;
-  sources: { id: string; name: string }[];
-};
-
-const useEverything = (page: number = 1, source?: string, search?: string) => {
-  const params = new URLSearchParams({
-    pageSize: "10",
-    page: search ? "1" : String(page),
-  });
-
-  if (source) params.append("sources", source);
-  if (search) params.append("q", search);
-
-  const { data, error, isValidating } = useSWR<EverythingResponse>(
-    `/everything?${params.toString()}`,
-    fetcher,
-    { revalidateIfStale: false }
-  );
-
-  return { data, error, isValidating };
-};
+import useStore from "@/store";
+import useHeadlines from "@/hooks/useHeadlines";
+import useEverything from "@/hooks/useEverything";
 
 const Feed = () => {
   const [page, setPage] = useState(1);
@@ -45,16 +15,12 @@ const Feed = () => {
   const [hasMore, setHasMore] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
 
-  const { search, source, setSource } = useStore();
+  const { params, setParams } = useStore();
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data, error, isValidating } = useEverything(page, source, search);
-
-  const { data: allHeadlines } = useSWRImmutable<HeadlinesResponse>(
-    `/top-headlines/sources?category=technology`,
-    fetcher<HeadlinesResponse>
-  );
+  const { data, error, isValidating } = useEverything(page, params);
+  const { data: headlines } = useHeadlines();
 
   useEffect(() => {
     if (data) {
@@ -64,21 +30,21 @@ const Feed = () => {
         return;
       }
       setHasMore(
-        search || !data.articles.length
+        params.search || !data.articles.length
           ? false
           : data.articles.length < data.totalResults
       );
-      if (search || page === 1) {
+      if (params.search || page === 1) {
         setAllData(data.articles);
         return;
       }
       setAllData((prev) => [...prev, ...data.articles]);
     }
-  }, [data, search, page]);
+  }, [data, params.search, page]);
 
   useEffect(() => {
     setPage(1);
-  }, [search, source]);
+  }, [params]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -86,7 +52,7 @@ const Feed = () => {
         if (
           entry.isIntersecting &&
           hasMore &&
-          !search &&
+          !params.search &&
           !isValidating &&
           !error &&
           data
@@ -107,28 +73,31 @@ const Feed = () => {
         observer.unobserve(currentLoadMoreRef);
       }
     };
-  }, [hasMore, isValidating, error, search, data]);
+  }, [hasMore, isValidating, error, params.search, data]);
 
   const sourceOptions = useMemo(() => {
-    return allHeadlines
-      ? allHeadlines.sources.map((source) => ({
+    return headlines
+      ? headlines.sources.map((source) => ({
           value: source.id,
           label: source.name,
         }))
       : [];
-  }, [allHeadlines]);
+  }, [headlines]);
 
   return (
     <div className="min-h-screen bg-gray-100 py-5 px-5 md:py-10 md:px-10">
       <div className="container mx-auto mt-0">
         <Select
-          onChange={(value: string) => setSource(value)}
+          value={params.source}
+          onChange={(value: string) =>
+            setParams({ search: params.search, source: value })
+          }
           options={sourceOptions}
           placeholder="Select source"
         />
       </div>
       <div className="container mx-auto mt-5 md:mt-9 grid md:grid-cols-4 grid-cols-1 gap-x-5 gap-y-9">
-        {!(page === 1 && isValidating && search) &&
+        {!(page === 1 && isValidating && params.search) &&
           allData?.map((article: Article) => (
             <Card item={article} key={article.url} />
           ))}

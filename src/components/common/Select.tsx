@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 interface SelectProps {
+  value?: string;
   options: { value: string; label: string }[];
   label?: string;
   placeholder?: string;
@@ -9,13 +10,14 @@ interface SelectProps {
 }
 
 export default function Select({
+  value,
   options,
   label,
   placeholder = "Choose...",
   onChange,
   className = "",
 }: SelectProps) {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(value);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;

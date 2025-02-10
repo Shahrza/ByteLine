@@ -1,17 +1,18 @@
 import { create } from "zustand";
 
-type State = {
+type URLSearchParams = {
   search: string;
-  setSearch: (search: string) => void;
   source: string;
-  setSource: (source: string) => void;
+};
+
+type State = {
+  params: URLSearchParams;
+  setParams: (params: URLSearchParams) => void;
 };
 
 const useStore = create<State>((set) => ({
-  search: "",
-  setSearch: (search: string) => set({ search }),
-  source: "techcrunch",
-  setSource: (source: string) => set({ source }),
+  params: { search: "", source: "techcrunch" },
+  setParams: (params) => set({ params }),
 }));
 
 export default useStore;

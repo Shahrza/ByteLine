@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router";
+
 import useStore from "@/store";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
-  const { setSearch } = useStore();
+  const { params, setParams } = useStore();
 
   const toggleMenu = (): void => {
     setIsOpen(!isOpen);
@@ -18,12 +19,12 @@ const Header = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSearch(searchInput);
+    setParams({ search: searchInput, source: params.source });
   };
 
   const handleClear = () => {
     setSearchInput("");
-    setSearch("");
+    setParams({ search: "", source: params.source });
   };
 
   return (
