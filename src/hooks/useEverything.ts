@@ -11,10 +11,12 @@ type EverythingResponse = {
   message?: string;
 };
 
-const useEverything = (
-  page: number = 1,
-  { search, source, sortBy }: URLSearchParams
-) => {
+const useEverything = ({
+  page,
+  search,
+  source,
+  sortBy,
+}: URLSearchParams & { page: number }) => {
   const params = new URLSearchParams({
     pageSize: "12",
     page: search ? "1" : String(page),

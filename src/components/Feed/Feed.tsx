@@ -20,7 +20,7 @@ const Feed = () => {
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data, error, isValidating } = useEverything(page, params);
+  const { data, error, isValidating } = useEverything({ page, ...params });
   const { data: headlines } = useHeadlines();
 
   useEffect(() => {
