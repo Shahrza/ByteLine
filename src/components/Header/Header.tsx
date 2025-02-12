@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router";
 
 import useStore from "@/store";
+import DarkModeToggle from "@/components/common/DarkModeToggle";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,8 +32,8 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4 flex justify-between items-center py-4">
+    <header className="bg-white dark:bg-gray-900 shadow-md">
+      <div className="container mx-auto flex justify-between items-center py-4 px-4 md:px-0">
         <NavLink to="/" className="text-2xl font-bold text-blue-500">
           ByteLine
         </NavLink>
@@ -43,7 +44,7 @@ const Header = () => {
               value={searchInput}
               onChange={handleChange}
               type="input"
-              className="px-4 py-2 rounded-lg w-[28vw] md:w-80 rounded-r-none border border-gray-200 focus:outline-none"
+              className="px-4 py-2 rounded-lg w-[28vw] md:w-80 rounded-r-none border border-gray-200 dark:border-gray-500 focus:outline-none dark:bg-gray-900 dark:text-white"
               placeholder="Search..."
             />
             {searchInput && (
@@ -64,13 +65,22 @@ const Header = () => {
           </button>
         </form>
 
-        <nav className="hidden md:flex space-x-6">
-          <NavLink to="/" className="text-gray-700 hover:text-blue-500">
+        <nav className="hidden md:flex items-center space-x-6 ">
+          <NavLink
+            to="/"
+            className="text-gray-700 hover:text-blue-500 dark:text-gray-200"
+          >
             Home
           </NavLink>
-          <NavLink to="/about" className="text-gray-700 hover:text-blue-500">
+          <NavLink
+            to="/about"
+            className="text-gray-700 hover:text-blue-500 dark:text-gray-200"
+          >
             About
           </NavLink>
+          <span className="hidden md:block">
+            <DarkModeToggle />
+          </span>
         </nav>
 
         <button
@@ -96,21 +106,24 @@ const Header = () => {
       </div>
 
       {isOpen && (
-        <nav className="md:hidden bg-white shadow-lg">
+        <nav className="md:hidden bg-white shadow-lg dark:bg-gray-900">
           <NavLink
             to="/"
-            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 border-t dark:border-gray-700"
             onClick={toggleMenu}
           >
             Home
           </NavLink>
           <NavLink
             to="/about"
-            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 border-t dark:border-gray-700"
             onClick={toggleMenu}
           >
             About
           </NavLink>
+          <div className="px-4 py-3 md:hidden shadow-md border-t dark:border-gray-700">
+            <DarkModeToggle />
+          </div>
         </nav>
       )}
     </header>

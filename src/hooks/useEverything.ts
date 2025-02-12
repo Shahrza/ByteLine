@@ -16,7 +16,7 @@ const useEverything = (
   { search, source, sortBy }: URLSearchParams
 ) => {
   const params = new URLSearchParams({
-    pageSize: "10",
+    pageSize: "12",
     page: search ? "1" : String(page),
   });
 

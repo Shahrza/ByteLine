@@ -86,7 +86,7 @@ const Feed = () => {
   }, [headlines]);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-5 px-5 md:py-10 md:px-10">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white py-4 px-4 md:py-10 md:px-10">
       <div className="container mx-auto mt-0 flex align-center gap-5">
         <Select
           value={params.source}
@@ -99,6 +99,7 @@ const Feed = () => {
           }
           options={sourceOptions}
           placeholder="Select source"
+          defaultValue={false}
         />
         <Select
           value={params.sortBy}
@@ -133,7 +134,7 @@ const Feed = () => {
         {errorMessage && (
           <div className="text-center text-red-500 mt-2">{errorMessage}</div>
         )}
-        {!hasMore && (
+        {!hasMore && !isValidating && (
           <div className="text-center text-gray-500 mt-2">
             No more items to load
           </div>
