@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import Card from "@/components/Card/Card";
 import Loading from "@/components/common/Loading";
@@ -76,14 +76,12 @@ const Feed = () => {
     };
   }, [hasMore, isValidating, error, params.search, data]);
 
-  const sourceOptions = useMemo(() => {
-    return headlines
-      ? headlines.sources.map((source) => ({
-          value: source.id,
-          label: source.name,
-        }))
-      : [];
-  }, [headlines]);
+  const sourceOptions = headlines
+    ? headlines.sources.map((source) => ({
+        value: source.id,
+        label: source.name,
+      }))
+    : [];
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white py-4 px-4 md:py-10 md:px-10">
