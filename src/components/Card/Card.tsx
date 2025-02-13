@@ -25,12 +25,16 @@ const Card = ({ item }: Props) => {
       <span className="text-xs text-white dark:text-gray-200  bg-cyan-600 px-2 py-1 rounded-full mb-2 inline-block">
         {source.name}
       </span>
-      <h3 className="text-xl font-semibold mb-4">{title}</h3>
-      <p className="text-gray-700 dark:text-gray-200 ">{description}</p>
-      <div className="flex text-sm text-gray-500 dark:text-gray-200  mt-4">
-        <p>By {author}</p>
-        <span className="mx-2">|</span>
-        <p>{format(new Date(publishedAt), "MMMM dd, yyyy")}</p>
+      <h3 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">
+        {title}
+      </h3>
+      <p className="text-gray-700 dark:text-gray-200">{description}</p>
+      <div className="flex text-sm mt-4">
+        <p className="text-gray-700 dark:text-gray-200">By {author}</p>
+        <span className="mx-2 text-gray-700 dark:text-gray-200">|</span>
+        <p className="text-gray-700 dark:text-gray-200">
+          {format(new Date(publishedAt), "MMMM dd, yyyy")}
+        </p>
       </div>
     </a>
   );
