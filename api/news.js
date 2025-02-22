@@ -3,7 +3,9 @@ export default async function handler(req, res) {
     req.query.endpoint
   }?${new URLSearchParams(req.query).toString()}`;
   const response = await fetch(url, {
-    headers: { Authorization: `Bearer ${process.env.VITE_API_KEY}` },
+    headers: {
+      "X-Api-Key": process.env.VITE_API_KEY,
+    },
   });
 
   const data = await response.json();

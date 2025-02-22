@@ -9,7 +9,7 @@ type HeadlinesResponse = {
 
 const useHeadlines = () => {
   const { data, error, isValidating } = useSWRImmutable<HeadlinesResponse>(
-    `/top-headlines/sources?category=technology`,
+    `top-headlines/sources?category=technology`,
     fetcher<HeadlinesResponse>
   );
 

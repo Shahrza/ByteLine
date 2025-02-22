@@ -27,7 +27,7 @@ const useEverything = ({
   if (sortBy) params.append("sortBy", sortBy);
 
   const { data, error, isValidating } = useSWR<EverythingResponse>(
-    `/everything?${params.toString()}`,
+    `everything?${params.toString()}`,
     fetcher,
     { revalidateIfStale: false }
   );
